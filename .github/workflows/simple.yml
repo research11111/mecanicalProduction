@@ -18,12 +18,17 @@ jobs:
     - name: Create ZIP archive
       run: zip archive.zip a.txt
 
+    - name: release name
+      id: release_name
+      run: |
+        echo "tagname=$(echo $GITHUB_REF | sed 's|refs/tags/||')" >> $GITHUB_OUTPUT
+
     - name: Create GitHub Release
       id: create_release
       uses: actions/create-release@v1
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: ${{ steps.release_name.outputs.tagname }}
+        release_name: Release ${{ steps.release_name.outputs.tagname }}
         draft: false
         prerelease: false
 
